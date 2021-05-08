@@ -1,4 +1,4 @@
 #!/bin/bash
 
-python server.py &
-python client.py &
+python3 maze_server.py 
+python3 runner_client.py
