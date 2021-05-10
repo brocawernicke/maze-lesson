@@ -13,6 +13,7 @@ class RunnerClient:
     self.channel.close()
     return True
 
+  """ main task for runner """
   def run(self):
     self.channel.send("Start")
 
@@ -28,26 +29,31 @@ class RunnerClient:
     path = self.runner.get_shortest_path()
     self._request_evaluation(path)
 
+  """ get surrounding 3x3 map """
   def _get3x3map(self):
     surr = self.channel.receive()
     return surr
 
+  """ send move information to map server """
   def _request_move(self, motion: tuple):
     self.channel.send(motion)
 
+  """ request an evaluation of the runner's shortest path """
   def _request_evaluation(self, path: list):
     self.channel.send(str(len(path)))
     for dir in path:
       self.channel.send(dir)
 
+
+""" main """
+def main(args):
+  runner = RunnerClient()
+  runner.run()
+
 def parse_args():
     parser = argparse.ArgumentParser(description="Tutorial code for on-boarding program.")
     args = parser.parse_args()
     return args
-
-def main(args):
-  runner = RunnerClient()
-  runner.run()
 
 if __name__ == "__main__":
   args = parse_args()

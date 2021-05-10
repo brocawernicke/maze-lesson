@@ -25,6 +25,7 @@ class MazeServer:
     self.map.set_map(buf)
     print('Succeeded loading {0}x{1} map: "{2}"'.format(rows, cols, file_name))
 
+  """ Map exploring mode """
   def exploring_mode(self):
     while True:
       cmd = self.channel.listen()
@@ -34,6 +35,7 @@ class MazeServer:
       surr = self.map.get3x3map()
       self.channel.send(surr)
 
+  """ Path evaluation mode """
   def evaluation_mode(self):
     path = []
     step_num = int(self.channel.listen())
@@ -44,18 +46,20 @@ class MazeServer:
     else:
       print('Incorrect')
 
-def parse_args():
-    parser = argparse.ArgumentParser(description="Tutorial code for on-boarding program.")
-    parser.add_argument("map_file", nargs=1, help="map file to load")
-    args = parser.parse_args()
-    return args
 
+""" main """
 def main(args):
   server = MazeServer()
 
   server.load_map(args.map_file[0])
   server.exploring_mode()
   server.evaluation_mode()
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Tutorial code for on-boarding program.")
+    parser.add_argument("map_file", nargs=1, help="map file to load")
+    args = parser.parse_args()
+    return args
 
 if __name__ == "__main__":
   args = parse_args()
