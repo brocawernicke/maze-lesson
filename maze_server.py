@@ -1,4 +1,3 @@
-import sys
 import argparse
 
 from channel.pipe import Channel
@@ -23,6 +22,7 @@ class MazeServer:
       for _ in range(rows):
         buf.append(file.readline().rstrip())
     self.map.set_map(buf)
+    self.map.calc_shortest_path()
     print('Succeeded loading {0}x{1} map: "{2}"'.format(rows, cols, file_name))
 
   """ Map exploring mode """

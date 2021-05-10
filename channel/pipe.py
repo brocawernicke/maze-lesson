@@ -13,7 +13,7 @@ class Channel:
         os.mkfifo(write_path)
 
     self.rf = os.open(read_path, os.O_CREAT | os.O_RDWR | os.O_SYNC)
-    self.wf = os.open(write_path, os.O_SYNC | os.O_CREAT | os.O_RDWR)
+    self.wf = os.open(write_path, os.O_CREAT | os.O_RDWR | os.O_SYNC)
 
   def receive(self) -> str:
     buf = os.read(self.rf, 1024)
@@ -24,6 +24,7 @@ class Channel:
   def send(self, buf: str):
     print('send {0} bytes: {1}'.format(len(buf), buf))
     os.write(self.wf, buf.encode())
+    time.sleep(1)
 
   def listen(self) -> str:
     while True:

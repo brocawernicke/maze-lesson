@@ -17,13 +17,20 @@ class RunnerClient:
   def run(self):
     self.channel.send("Start")
 
-    #while "UNTIL_THE_END_OF_EXPLORATION":
-    for _ in range(5):
+    cur = '?'
+    while cur != 'S':
       surr = self._get3x3map()
       self.runner.update_map(surr)
-      motion = self.runner.get_next_move()
+      cur, motion = self.runner.get_next_move()
       self._request_move(motion)
       
+    #while "UNTIL_THE_END_OF_EXPLORATION":
+    while cur != 'E':
+      surr = self._get3x3map()
+      self.runner.update_map(surr)
+      cur, motion = self.runner.get_next_move()
+      self._request_move(motion)
+
     self.channel.send("End")
 
     path = self.runner.get_shortest_path()

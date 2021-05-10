@@ -1,10 +1,12 @@
 from maze import conversion
+from maze.bfs import bfs
 
 class Runner:
   def __init__(self):
-    self.pos = [1, 1]
+    self.pos = [20, 20]
     self.dir = 'N'
-    self.map = [[0 for _ in range(10)] for _ in range(10)]
+    self.map = [['?' for _ in range(40)] for _ in range(40)]
+    self.visited = [[False for _ in range(40)] for _ in range(40)]
 
   """ update runner's imaginary map per 3x3 map """
   def update_map(self, surr: str):
@@ -14,26 +16,34 @@ class Runner:
 
   """ calculate a next moving direction """
   def get_next_move(self) -> str:
-    dir = 'Forward'
+    dir, cur = 'Lost', '?'
     i, j = self.pos[0], self.pos[1]
-    if self.map[i-1][j] == 'O':
+    if self.map[i-1][j] in 'ROSE' and not self.visited[i-1][j]:
       self.pos[0] -= 1
       dir = conversion.DIR[-conversion.NESW.index(self.dir)]
       self.dir = 'N'
-    elif self.map[i][j+1] == 'O':
+      self.visited[i-1][j] = True
+      cur = self.map[i-1][j]
+    elif self.map[i][j+1] in 'ROSE' and not self.visited[i][j+1]:
       self.pos[1] -= 1
       dir = conversion.DIR[1 - conversion.NESW.index(self.dir)]
       self.dir = 'E'
-    elif self.map[i+1][j] == 'O':
+      self.visited[i][j+1] = True
+      cur = self.map[i][j+1]
+    elif self.map[i+1][j] in 'ROSE' and not self.visited[i+1][j]:
       self.pos[0] += 1
       dir = conversion.DIR[2 - conversion.NESW.index(self.dir)]
       self.dir = 'S'
-    elif self.map[i][j-1] == 'O':
+      self.visited[i+1][j] = True
+      cur = self.map[i+1][j]
+    elif self.map[i][j-1] in 'ROSE' and not self.visited[i+1][j]:
       self.pos[1] -= 1
       dir = conversion.DIR[3 - conversion.NESW.index(self.dir)]
       self.dir = 'W'
-    return dir
+      self.visited[i][j-1] = True
+      cur = self.map[i][j-1]
+    return cur, dir
 
   """ calculate the shortest path on runner's map """
   def get_shortest_path(self) -> list:
-    return []
+    return bfs(self.map)

@@ -1,4 +1,5 @@
 from maze import conversion
+from maze.bfs import bfs
 
 class Map:
   def __init__(self):
@@ -10,10 +11,15 @@ class Map:
   """ map setter """
   def set_map(self, map_data: list):
     self.map = map_data
+    self._find_R()
 
   """ calculate the shortest path """
   def calc_shortest_path(self):
-    self.path = []
+    self.path = bfs(self.map)
+
+    for i in range(len(self.map)):
+      print(self.map[i])
+    print(self.path)
 
   """ get surrounding 3x3 map """
   def get3x3map(self) -> str:
@@ -27,13 +33,22 @@ class Map:
   """ update runner position per runner's message """
   def update_pos(self, cmd: str):
     if cmd == 'Start':
-      self.pos = [1, 1]
-      self.dir = 'N'
+      self._find_R()
     else:
       new_nesw = (conversion.NESW.index(self.dir) + conversion.DIR.index(cmd)) % 4
       self.dir = conversion.NESW[new_nesw]
       self.pos = [sum(x) for x in zip(self.pos, conversion.STEPS[new_nesw])]
+      print(self.pos)
 
   """ check if a runner's path is the shortest path """
   def evaluate_path(self, path: list) -> str:
     return False
+
+  """ find initial position """
+  def _find_R(self):
+    for i in range(len(self.map)):
+      for j in range(len(self.map[0])):
+        if self.map[i][j] == 'R':
+          self.pos = [i, j]
+          self.dir = 'N'
+          return
