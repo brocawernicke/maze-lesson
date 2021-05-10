@@ -10,6 +10,8 @@ class Runner:
 
   """ update runner's imaginary map per 3x3 map """
   def update_map(self, surr: str):
+    for _ in range(conversion.NESW.index(self.dir)):
+      surr = [surr[conversion.CCW[i]] for i in range(9)]
     for i in range(-1, 2):
       for j in range(-1, 2):
         self.map[self.pos[0]+i][self.pos[1]+j] = surr[(i+1)*3+(j+1)]
@@ -25,7 +27,7 @@ class Runner:
       self.visited[i-1][j] = True
       cur = self.map[i-1][j]
     elif self.map[i][j+1] in 'ROSE' and not self.visited[i][j+1]:
-      self.pos[1] -= 1
+      self.pos[1] += 1
       dir = conversion.DIR[1 - conversion.NESW.index(self.dir)]
       self.dir = 'E'
       self.visited[i][j+1] = True
@@ -36,12 +38,14 @@ class Runner:
       self.dir = 'S'
       self.visited[i+1][j] = True
       cur = self.map[i+1][j]
-    elif self.map[i][j-1] in 'ROSE' and not self.visited[i+1][j]:
+    elif self.map[i][j-1] in 'ROSE' and not self.visited[i][j-1]:
       self.pos[1] -= 1
       dir = conversion.DIR[3 - conversion.NESW.index(self.dir)]
       self.dir = 'W'
       self.visited[i][j-1] = True
       cur = self.map[i][j-1]
+    print(cur)
+    print("next: ", self.dir, self.pos)
     return cur, dir
 
   """ calculate the shortest path on runner's map """

@@ -36,8 +36,12 @@ class Map:
       self._find_R()
     else:
       new_nesw = (conversion.NESW.index(self.dir) + conversion.DIR.index(cmd)) % 4
+
+      print("move: ", self.dir, new_nesw, conversion.NESW.index(self.dir), conversion.DIR.index(cmd))
+
       self.dir = conversion.NESW[new_nesw]
       self.pos = [sum(x) for x in zip(self.pos, conversion.STEPS[new_nesw])]
+
       print(self.pos)
 
   """ check if a runner's path is the shortest path """
