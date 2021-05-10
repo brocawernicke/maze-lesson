@@ -38,9 +38,9 @@ class MazeServer:
   """ Path evaluation mode """
   def evaluation_mode(self):
     path = []
-    step_num = int(self.channel.listen())
+    step_num = int(self.channel.receive())
     for _ in range(step_num):
-      path.append(self.channel.read())
+      path.append(self.channel.receive())
     if self.map.evaluate_path(path) == True:
       print('Correct')
     else:
