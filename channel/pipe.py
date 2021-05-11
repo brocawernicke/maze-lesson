@@ -24,7 +24,7 @@ class Channel:
   def send(self, buf: str):
     logging.debug('send {0} bytes: {1}'.format(len(buf), buf))
     os.write(self.wf, buf.encode())
-    time.sleep(0.1)
+    time.sleep(0.01)
 
   def listen(self) -> str:
     while True:

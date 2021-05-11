@@ -18,20 +18,16 @@ class RunnerClient:
   def run(self):
     self.channel.send("Start")
 
-    cur = '?'
-    while cur != 'S':
+    while not self.runner.start_found:
       surr = self._get3x3map()
       self.runner.update_map(surr)
-      cur, motion = self.runner.get_next_move()
+      motion = self.runner.get_next_move()
       self._request_move(motion)
       
-    #while "UNTIL_THE_END_OF_EXPLORATION":
-    while cur != 'E':
+    while not self.runner.goal_found:
       surr = self._get3x3map()
       self.runner.update_map(surr)
-      cur, motion = self.runner.get_next_move()
-      if self.runner.get_exploring_status():
-        break
+      motion = self.runner.get_next_move()
       self._request_move(motion)
 
     self.channel.send("End")

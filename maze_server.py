@@ -23,8 +23,8 @@ class MazeServer:
       for _ in range(rows):
         buf.append(file.readline().rstrip())
     self.map.set_map(buf)
-    self.map.calc_shortest_path()
     logging.info('Succeeded loading {0}x{1} map: "{2}"'.format(rows, cols, file_name))
+    self.map.calc_shortest_path()
 
   """ Map exploring mode """
   def exploring_mode(self):

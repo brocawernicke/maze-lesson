@@ -3,7 +3,7 @@
 pass=0
 total=0
 
-for map in ../maps/*; do
+for map in maps/*; do
   let total+=1
   python3 maze_server.py $map &
   if python3 runner_client.py; then
