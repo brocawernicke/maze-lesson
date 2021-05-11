@@ -1,3 +1,4 @@
+import logging
 import argparse
 
 from channel.pipe import Channel
@@ -8,7 +9,7 @@ class MazeServer:
     self.map = Map()
     self.channel = Channel()
     self.channel.open("/tmp/to.maze", "/tmp/to.runner")
-    print('Open named pipe')
+    logging.debug('Open named pipe')
 
   def __exit__(self):
     self.channel.close()
@@ -23,7 +24,7 @@ class MazeServer:
         buf.append(file.readline().rstrip())
     self.map.set_map(buf)
     self.map.calc_shortest_path()
-    print('Succeeded loading {0}x{1} map: "{2}"'.format(rows, cols, file_name))
+    logging.info('Succeeded loading {0}x{1} map: "{2}"'.format(rows, cols, file_name))
 
   """ Map exploring mode """
   def exploring_mode(self):
@@ -42,9 +43,11 @@ class MazeServer:
     for _ in range(step_num):
       path.append(self.channel.receive())
     if self.map.evaluate_path(path) == True:
-      print('Correct')
+      logging.debug('Correct')
+      self.channel.send('Correct')
     else:
-      print('Incorrect')
+      logging.debug('Incorrect')
+      self.channel.send('Incorrect')
 
 
 """ main """
@@ -63,4 +66,5 @@ def parse_args():
 
 if __name__ == "__main__":
   args = parse_args()
+  logging.basicConfig(level=logging.INFO)
   main(args)

@@ -1,3 +1,5 @@
+import logging
+
 from maze import conversion
 from maze.bfs import bfs
 
@@ -18,8 +20,8 @@ class Map:
     self.path = bfs(self.map)
 
     for i in range(len(self.map)):
-      print(self.map[i])
-    print(self.path)
+      logging.debug('{0}'.format(self.map[i]))
+    logging.debug('{0}'.format(self.path))
 
   """ get surrounding 3x3 map """
   def get3x3map(self) -> str:
@@ -37,16 +39,16 @@ class Map:
     else:
       new_nesw = (conversion.NESW.index(self.dir) + conversion.DIR.index(cmd)) % 4
 
-      print("move: ", self.dir, new_nesw, conversion.NESW.index(self.dir), conversion.DIR.index(cmd))
+      logging.debug('move: {0} {1} {2} {3}'.format(self.dir, new_nesw, conversion.NESW.index(self.dir), conversion.DIR.index(cmd)))
 
       self.dir = conversion.NESW[new_nesw]
       self.pos = [sum(x) for x in zip(self.pos, conversion.STEPS[new_nesw])]
 
-      print(self.pos)
+      logging.debug('{0}'.format(self.pos))
 
   """ check if a runner's path is the shortest path """
   def evaluate_path(self, path: list) -> str:
-    return False
+    return self.path == path
 
   """ find initial position """
   def _find_R(self):

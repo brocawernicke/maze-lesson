@@ -1,4 +1,4 @@
-import os, time
+import os, time, logging
 
 class Channel:
   def __init__(self):
@@ -18,13 +18,13 @@ class Channel:
   def receive(self) -> str:
     buf = os.read(self.rf, 1024)
     self.buf = buf.decode()
-    print('received {0} bytes: {1}'.format(len(self.buf), self.buf))
+    logging.debug('received {0} bytes: {1}'.format(len(self.buf), self.buf))
     return self.buf
 
   def send(self, buf: str):
-    print('send {0} bytes: {1}'.format(len(buf), buf))
+    logging.debug('send {0} bytes: {1}'.format(len(buf), buf))
     os.write(self.wf, buf.encode())
-    time.sleep(1)
+    time.sleep(0.1)
 
   def listen(self) -> str:
     while True:

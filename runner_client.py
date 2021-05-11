@@ -1,4 +1,5 @@
-import argparse
+import logging
+import sys, argparse
 
 from channel.pipe import Channel
 from maze.runner import Runner
@@ -29,12 +30,17 @@ class RunnerClient:
       surr = self._get3x3map()
       self.runner.update_map(surr)
       cur, motion = self.runner.get_next_move()
+      if self.runner.get_exploring_status():
+        break
       self._request_move(motion)
 
     self.channel.send("End")
 
     path = self.runner.get_shortest_path()
     self._request_evaluation(path)
+    result = self.channel.receive()
+
+    return result
 
   """ get surrounding 3x3 map """
   def _get3x3map(self):
@@ -55,7 +61,14 @@ class RunnerClient:
 """ main """
 def main(args):
   runner = RunnerClient()
-  runner.run()
+  result = runner.run()
+
+  if result == 'Incorrect':
+    logging.info('Incorrect')
+    sys.exit(1)
+
+  logging.info('Correct')
+  sys.exit(0)
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Tutorial code for on-boarding program.")
@@ -64,4 +77,5 @@ def parse_args():
 
 if __name__ == "__main__":
   args = parse_args()
+  logging.basicConfig(level=logging.INFO)
   main(args)
