@@ -1,19 +1,26 @@
 import os, time, logging
 
 class Channel:
-  def __init__(self):
+  def __init__(self, read_path:str, write_path: str):
     self.rf = None
     self.wf = None
     self.buf = []
-
-  def open(self, read_path: str, write_path: str):
+    
+    self.read_path = read_path
+    self.write_path = write_path
+    
     if not os.path.exists(read_path):
         os.mkfifo(read_path)
     if not os.path.exists(write_path):
         os.mkfifo(write_path)
 
-    self.rf = os.open(read_path, os.O_CREAT | os.O_RDWR | os.O_SYNC)
-    self.wf = os.open(write_path, os.O_CREAT | os.O_RDWR | os.O_SYNC)
+  def __exit__(self):
+    os.remove(self.read_path)
+    os.remove(self.write_path)
+
+  def open(self):
+    self.rf = os.open(self.read_path, os.O_CREAT | os.O_RDWR | os.O_SYNC)
+    self.wf = os.open(self.write_path, os.O_CREAT | os.O_RDWR | os.O_SYNC)
 
   def receive(self) -> str:
     buf = os.read(self.rf, 1024)

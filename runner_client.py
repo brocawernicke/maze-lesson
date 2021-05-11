@@ -7,8 +7,8 @@ from maze.runner import Runner
 class RunnerClient:
   def __init__(self):
     self.runner = Runner()
-    self.channel = Channel()
-    self.channel.open("/tmp/to.runner", "/tmp/to.maze")
+    self.channel = Channel("/tmp/to.runner", "/tmp/to.maze")
+    self.channel.open()
 
   def __exit__(self):
     self.channel.close()

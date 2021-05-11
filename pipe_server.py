@@ -28,7 +28,7 @@ class Server:
                 finally:
                     poll.unregister(fifo)
             finally:
-                os.sloce(fifo)
+                os.close(fifo)
         finally:
             os.remove(NAMED_PIPE)
 

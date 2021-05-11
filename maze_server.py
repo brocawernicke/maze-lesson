@@ -7,8 +7,8 @@ from maze.map import Map
 class MazeServer:
   def __init__(self):
     self.map = Map()
-    self.channel = Channel()
-    self.channel.open("/tmp/to.maze", "/tmp/to.runner")
+    self.channel = Channel("/tmp/to.maze", "/tmp/to.runner")
+    self.channel.open()
     logging.debug('Open named pipe')
 
   def __exit__(self):
